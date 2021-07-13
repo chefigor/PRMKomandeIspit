@@ -1,0 +1,6 @@
+===centralized DHCP L3===
+L3(config)# ip dhcp pool wlan
+L3(dhcp-config)#network 192.168.20 255.255.255.0
+L3(dhcp-config)#default-router 192.168.2.1
+L3(config)#do sh ip dhcp pool
+

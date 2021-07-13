@@ -1,0 +1,62 @@
+===Switch configuration===
+Switch>enable
+Switch#config t
+Switch(config)#enable password prm2020 // enable secret
+Switch(config)#line con 0
+Switch(config-line)#password prm2020
+Switch(config-line)#login
+Switch(config-line)#logging s[ynchrounous]
+Switch(config)#service password-encryption
+Switch(config)#hostname SW1
+SW1(config)#interface vlan 99 // 1
+SW1(config-if)#ip address 192.168.1.100 255.255.255.0
+SW1(config-if)#no sh
+SW1(config-if)#exit
+SW1(config)#line vty 0 15
+SW1(config-line)#password prm2020
+SW1(config-line)#login
+SW1(config-line)#logging s[]
+SW1(config-line)#exit
+SW1(config)#banner motd #Warning! Unauthorized access is forbidden#
+SW1(config)#line vty 0 15
+SW1(config-line)#transport input [all|none|ssh|telnet]
+SW1(config-line)#exit
+SW1(config)#ip domain-name proba.com
+SW1(config)#crypto key generate rsa //ukucaj 1024
+SW1(config)#
+C:>ssh -l admin 192.168.1.100 //pristup preko telneta
+
+===Router configuration===
+Router(config)#hostname R1
+Router(config)#int fa0/0
+Router(config-if)#ip add 
+Router(config-if)#no sh
+Router(config)#enable secret prm
+Router(config)#line con 0
+Router(config-line)#passsword prm
+Router(config-line)#login
+Router(config-line)#vty 0 15
+Router(config-line)#password prm
+Router(config-line)#login
+Router(config-line)#exit
+Router(config)#line vty 0 15
+Router(config-line)#transport input all
+Router(config)#ip domain-name proba.com
+Router(config)#crypto key generate rsa
+
+===Switch port-switch configuration===
+SW1(config)#do show port-security
+SW1(config)#int fa0/1
+SW1(config-if)#switchport mode access
+SW1(config-if)#switchport port-security //aktiviranje port-security-a
+//mora prvo da se kativira na mode access
+SW1(config-if)#switchport port-security mac-address [H.H.H|sticky] //h.h.h je mac adresa
+SW1#clear mac-address-table //clearuje mac adderss table :D
+SW1(config-if)#shutdown //reset ako se desi shutdown security violation
+SW1(config-if)#no shutdown
+SW1(config-if)#switchport port-security violation [restrict|shutdown;ovo je default|restrict]
+SW1(config-if)#do show port-secuirty
+SW1(config-if)#switchport port-security maximum 4
+SW1(config-if)#switchprot port-security mac-address sticky
+
+

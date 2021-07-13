@@ -1,0 +1,48 @@
+===VLAN confiugration===
+SW1(config)# do sh clan
+SW1(config)#vlan 2
+SW1(config-vlan)#name drugi
+SW1(config)#int fa0/2
+SW1(config-if)#switport access vlan 2
+SW1(config)#int range f0/10-11
+SW1(config-if)#sw access vlan 2
+
+---router configuration without 802.11q---
+R1(config)#int f0/1
+R1(config-if)#ip add 192.168.1.1 255.255.255.0
+R1(config-if)#no sh
+R1(config-if)#int f0/2
+R1(config-if)#ip add 192.168.2.1 255.255.255.0
+R1(config-if)#no sh
+
+---router on stick--- 
+---switch configuration trunk---
+S1(config)#int range gi0/1-2
+S1(config-if)#switchport mode trunk
+S1(config)#show int trunk
+---router configuration---
+R1(config)#int f0/0.1
+R1(config-if)#encapsulation dto1Q 1
+R1(config-if)#ip add
+R1(config-if)#int f0/0.2
+R1(config-if)#int f0/0
+R1(config-if)#no shut
+
+---layer 3 swtich----
+L3(config)#vlan 2
+L3(config)#int f0/2
+L3(config-if)#switchport mode acc v 2
+L3(config)#int range gi0/1-2
+L3(config)#switchport trunk encapsulation dot1q
+L3(config)#switchport mode trunk
+L3(config)#show vlan
+L3(config)#show interfaces trunk
+L3(config)#ip routing
+L3(config)#interface vlan 1
+L3(config-if)#ip add 192.168.1.1 255.255.255.0
+L3(config-if)#no sh
+L3(config-if)#interface vlan 2
+L3(config-if)#ip add 192.168.2.1 255.255.255.0
+L3(config-if)#no sh
+L3(config)#do show ip route
+

@@ -1,0 +1,38 @@
+===podesavanje voip===
+na ip phone portovima
+SW1(config)#int range f0/1-4
+SW1(config-if-range)#switchport mode access
+SW1(config-if-range)#switchport access vlan 20
+SW1(config-if-range)#switchport voice vlan 10
+
+R1(config)#int f0/0
+R1(config)#no sh
+R1(config-if)#int f0/0.10
+R1(config-if)#encapsulation dot1q 10
+R1(config-if)#ip address 192.168.0.1 255.255.255.0
+R1(config-if)#int f0/0.20
+R1(config-if)#encapsulation dot1q 20
+R1(config-if)#ip address 192.168.1.1 255.255.255.0
+
+R1(config)#ip dhcp pool telefoni
+R1(dhcp-config)#network 192.168.0.0 255.255.255.0
+R1(dhcp-config)#default-router 192.168.0.1
+R1(dhcp-config)#option 150 ip 192.168.0.1
+R1(config)#telephony-service
+R1(config-telephony)#max-ephones 10
+R1(config-telephony)#max-dn 10
+R1(config-telephony)#auto assign 1 to 10
+R1(config-telephony)#ip source-address 192.168.0.1 port 2000
+R1(config-telephony)#create cnf-files
+R1(config-telephony)#exit
+R1(config)#ephone-dn 1
+R1(config-ephone-dn)#number 1001
+R1(config-ephone-dn)#exit
+R1(config)#ephone-dn 2
+R1(config-ephone-dn)#number 1002
+R1(config-ephone-dn)#exit
+R1(config)#ephone-dn 3
+R1(config-ephone-dn)#number 1003
+
+R1(config)#dial-peer voice 1 voip
+R1(config-dial-peer)#destination-pattern 2T
